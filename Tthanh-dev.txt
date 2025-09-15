@@ -1,40 +1,16 @@
 -- Services
 local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
-local HttpService = game:GetService("HttpService")
+local HttpService =("HttpService")
 
-local player = Players.LocalPlayer
-if not player then
-    warn("Không tìm thấy LocalPlayer.")
+local player = Players.LocalPlaye    warng tìm thấy LocalPlayer.")
     return
-end
-
--- DANH SÁCH KEY (premium)
+- DANH SÁCH KEY (premium)
 local PremiumKeys = {
-    "kwHraWVdmbONndsoTDjDwOgGPDwXlsoC--fb357##**",
-    "Hrjdvejdbdvsjkevfbrkdkfbf--fb357##**",
-    "KPexJaLm@#!?^^{23689}}={{\\Joh*#",
-    "bN4$Kd8^Pw2qVz!eXyRt--fb357##**",
-    "oJ7f@!rQ9Ls2^TbW5xMz--fb357##**",
-    "uTz3!qRw8Bn6%LpXcVhK--fb357##**",
-    "mZp1@!vD4Jy7^WtQ9kFs--fb357##**",
-    "rL8x#Nd2!Hw5^Tf9VpKy--fb357##**",
-    "gQz6!Rw3^Pt9#Lf2XbMn--fb357##**",
-    "aKc5!Xt7^Vn2#Jm9LqRs--fb357##**",
-    "kwHraWVdmbONndsoTDjDwOgGPDwXlsoC"
+    "kwHr"
 }
 
--- KEY FREE
-local FreeKey = "KEY-9A7E64AE2B39"
-local PREMIUM_SCRIPT_URL = "https://raw.githubusercontent.com/kaimm2/Steal-A-Brainrot/refs/heads/main/V2"
-local FREE_SCRIPT_URL= "https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"
-
--- Helper: trim string
-local function trim(s)
-    if typeof(s) ~= "string" then return "" end
-    return s:match("^%s*(.-)%s*$") or ""
-end
-
+) 
 -- Show a simple notification (uses StarterGui Core if available)
 local function notify(title, text, duration)
     duration = duration or 3
@@ -77,16 +53,13 @@ local function promptForKey()
     local title = Instance.new("TextLabel", frame)
     title.Size = UDim2.new(1, -20, 0, 28)
     title.Position = UDim2.new(0,10,0,8)
-    title.BackgroundTransparency = 1
-    title.Text = "Nhập key"
-    title.TextColor3 = Color3.new(1,1,1)
-    title.Font = Enum.Font.SourceSansBold
+    title.Backitle.Font = Enum.Font.SourceSansBold
     title.TextSize = 20
     title.TextXAlignment = Enum.TextXAlignment.Left
 
     -- Credit label centered under title: "Script by TBThanh"
     local credit = Instance.new("TextLabel", frame)
-    credit.Size = UDim2.new(1, -20, 0, 18)
+    credit.
     credit.Position = UDim2.new(0,10,0,36)
     credit.BackgroundTransparency = 1
     credit.Text = "Script by TBThanh"
