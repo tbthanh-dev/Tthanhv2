@@ -1,0 +1,253 @@
+-- Services
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local HttpService = game:GetService("HttpService")
+
+local player = Players.LocalPlayer
+if not player then
+    warn("Không tìm thấy LocalPlayer.")
+    return
+end
+
+-- DANH SÁCH KEY (premium)
+local PremiumKeys = {
+    "kwHraWVdmbONndsoTDjDwOgGPDwXlsoC--fb357##**",
+    "Hrjdvejdbdvsjkevfbrkdkfbf--fb357##**",
+    "KPexJaLm@#!?^^{23689}}={{\\Joh*#",
+    "bN4$Kd8^Pw2qVz!eXyRt--fb357##**",
+    "oJ7f@!rQ9Ls2^TbW5xMz--fb357##**",
+    "uTz3!qRw8Bn6%LpXcVhK--fb357##**",
+    "mZp1@!vD4Jy7^WtQ9kFs--fb357##**",
+    "rL8x#Nd2!Hw5^Tf9VpKy--fb357##**",
+    "gQz6!Rw3^Pt9#Lf2XbMn--fb357##**",
+    "aKc5!Xt7^Vn2#Jm9LqRs--fb357##**",
+    "kwHraWVdmbONndsoTDjDwOgGPDwXlsoC"
+}
+
+-- KEY FREE
+local FreeKey = "KEY-9A7E64AE2B39"
+local PREMIUM_SCRIPT_URL = "https://raw.githubusercontent.com/kaimm2/Steal-A-Brainrot/refs/heads/main/V2"
+local FREE_SCRIPT_URL= "https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"
+
+-- Helper: trim string
+local function trim(s)
+    if typeof(s) ~= "string" then return "" end
+    return s:match("^%s*(.-)%s*$") or ""
+end
+
+-- Show a simple notification (uses StarterGui Core if available)
+local function notify(title, text, duration)
+    duration = duration or 3
+    pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = title;
+            Text = text;
+            Duration = duration;
+        })
+    end)
+end
+
+-- Prompt for key (modal) - UI updated: centered for mobile + "Script by Tthanh" inside frame
+local function promptForKey()
+    -- Prevent duplicate GUI
+    if player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("KeyPromptGui") then
+        player.PlayerGui.KeyPromptGui:Destroy()
+    end
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "KeyPromptGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = player:WaitForChild("PlayerGui")
+
+    -- Main centered frame
+    local frame = Instance.new("Frame", gui)
+    frame.Size = UDim2.new(0, 360, 0, 180)
+    frame.Position = UDim2.new(0.5, 0, 0.5, 0) -- chính giữa màn hình
+    frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    frame.BackgroundColor3 = Color3.fromRGB(28,28,28)
+    frame.BorderSizePixel = 0
+    frame.ClipsDescendants = true
+    frame.Name = "KeyFrame"
+    frame.Visible = true
+
+    local uic = Instance.new("UICorner", frame)
+    uic.CornerRadius = UDim.new(0,10)
+
+    -- Title (left)
+    local title = Instance.new("TextLabel", frame)
+    title.Size = UDim2.new(1, -20, 0, 28)
+    title.Position = UDim2.new(0,10,0,8)
+    title.BackgroundTransparency = 1
+    title.Text = "Nhập key"
+    title.TextColor3 = Color3.new(1,1,1)
+    title.Font = Enum.Font.SourceSansBold
+    title.TextSize = 20
+    title.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Credit label centered under title: "Script by TBThanh"
+    local credit = Instance.new("TextLabel", frame)
+    credit.Size = UDim2.new(1, -20, 0, 18)
+    credit.Position = UDim2.new(0,10,0,36)
+    credit.BackgroundTransparency = 1
+    credit.Text = "Script by TBThanh"
+    credit.Font = Enum.Font.SourceSansItalic
+    credit.TextSize = 14
+    credit.TextColor3 = Color3.fromRGB(200,200,200)
+    credit.TextXAlignment = Enum.TextXAlignment.Center
+    credit.AnchorPoint = Vector2.new(0.5,0)
+    credit.Position = UDim2.new(0.5,0,0,36)
+
+    -- Close X button (top-right)
+    local closeBtn = Instance.new("TextButton", frame)
+    closeBtn.Size = UDim2.new(0,28,0,28)
+    closeBtn.Position = UDim2.new(1, -36, 0, 6)
+    closeBtn.AnchorPoint = Vector2.new(0,0)
+    closeBtn.Text = "X"
+    closeBtn.Font = Enum.Font.SourceSansBold
+    closeBtn.TextSize = 18
+    closeBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+    closeBtn.TextColor3 = Color3.new(1,1,1)
+    closeBtn.Name = "CloseX"
+    local closeCorner = Instance.new("UICorner", closeBtn)
+    closeCorner.CornerRadius = UDim.new(0,6)
+
+    -- Input box (placed under credit)
+    local input = Instance.new("TextBox", frame)
+    input.Size = UDim2.new(1, -20, 0, 46)
+    input.Position = UDim2.new(0,10,0,64)
+    input.PlaceholderText = "Nhập key..."
+    input.ClearTextOnFocus = false
+    input.Font = Enum.Font.SourceSans
+    input.TextSize = 18
+    input.Text = ""
+    input.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    input.TextColor3 = Color3.new(1,1,1)
+    input.AutomaticSize = Enum.AutomaticSize.None
+    local inputCorner = Instance.new("UICorner", input)
+
+    local status = Instance.new("TextLabel", frame)
+    status.Size = UDim2.new(1, -20, 0, 20)
+    status.Position = UDim2.new(0,10,0,114)
+    status.BackgroundTransparency = 1
+    status.Text = ""
+    status.TextColor3 = Color3.fromRGB(200,200,200)
+    status.Font = Enum.Font.SourceSans
+    status.TextSize = 14
+    status.TextXAlignment = Enum.TextXAlignment.Left
+
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(0,130,0,36)
+    btn.Position = UDim2.new(1, -140, 1, -16)
+    btn.AnchorPoint = Vector2.new(1,1)
+    btn.Text = "Xác nhận"
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 18
+    btn.BackgroundColor3 = Color3.fromRGB(70,70,70)
+    btn.TextColor3 = Color3.new(1,1,1)
+    local btnCorner = Instance.new("UICorner", btn)
+
+    local result = nil
+    local done = false
+
+    local function finish()
+        result = tostring(input.Text or "")
+        done = true
+    end
+
+    btn.MouseButton1Click:Connect(function()
+        status.Text = "Đang xác nhận..."
+        finish()
+    end)
+
+    closeBtn.MouseButton1Click:Connect(function()
+        -- Close via X: treat as cancel (empty string)
+        result = ""
+        done = true
+    end)
+
+    input.FocusLost:Connect(function(enter)
+        if enter then finish() end
+    end)
+
+    -- timeout 120s
+    local start = tick()
+    while not done and tick() - start < 120 do
+        wait(0.1)
+    end
+
+    gui:Destroy()
+    return result or ""
+end
+
+-- Hàm load script an toàn (giữ try/catch cơ bản và validate)
+local function safeLoadFrom(url)
+    if not url or url == "" then
+        warn("URL rỗng.")
+        return
+    end
+
+    -- Basic check: http enabled in environment is required (exploit-specific)
+    local ok, res = pcall(function()
+        local txt = game:HttpGet(url)
+        return txt
+    end)
+    if not ok or type(res) ~= "string" then
+        warn("Không thể lấy nội dung từ URL:", tostring(res))
+        notify("Load script", "Lỗi khi tải từ URL.", 4)
+        return
+    end
+
+    -- Quick sanity: content must be non-trivial
+    if #res < 10 then
+        warn("Nội dung trả về quá ngắn.")
+        notify("Load script", "Nội dung trả về không hợp lệ.", 4)
+        return
+    end
+
+    -- Optional: show a tiny preview (first 120 ký tự) in output for debugging
+    print("Preview (first 120 chars):", res:sub(1, 120):gsub("\n"," "))
+
+    -- Now try to load
+    local ok2, res2 = pcall(function()
+        local f = loadstring(res)
+        if type(f) == "function" then
+            return f()
+        else
+            error("loadstring không trả về function.")
+        end
+    end)
+
+    if not ok2 then
+        warn("Lỗi khi chạy script:", res2)
+        notify("Load script", "Lỗi khi chạy script. Xem output.", 5)
+    else
+        notify("Load script", "Script đã chạy (nếu không có lỗi).", 3)
+    end
+end
+
+-- Main
+local entered = promptForKey()
+entered = trim(entered)
+
+if entered == "" then
+    warn("Không nhập key.")
+    notify("Key Loader", "Bạn đã đóng menu hoặc không nhập key.", 3)
+    return
+end
+
+if table.find(PremiumKeys, entered) then
+    print("Key premium hợp lệ.")
+    notify("Key Loader", "Key dung roi nha", 3)
+    safeLoadFrom(PREMIUM_SCRIPT_URL)
+elseif entered == FreeKey then
+    print("Key dung.")
+    notify("Key Loader", "Key free hợp lệ. Load free script...", 3)
+    safeLoadFrom(FREE_SCRIPT_URL)
+else
+    warn("Key deo dung.")
+    StarterGui:SetCore("SendNotification", {
+        Title = "Key Loader",
+        Text = "Key deo co trong may tao.",
+        Duration = 3,
+    })
+end
